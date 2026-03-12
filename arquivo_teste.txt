@@ -1,0 +1,45 @@
+((10 5 +) MEM) @ certo
+(3.14 2 ^) 5 * @certo
+20 4 // (10 MEM) @ errado por 2 numeros no final? ou o 10 mem eh executado e sobra 1 so
+15 3 % 2.5 + @certo
+100 2 / (1 RES) @errado sobra 2 numeros
+2 (X MEM) 5 * @errado entrada invalida para MEM
+(8 2 ^ 10 + BAGUGA) @certo
+45.5 5.5 - 2 / @certo
+10 20 30 + * @certo
+(MEM) 5 + (1 RES) * @certo
+50 2 // 5 % @certo
+12.5 0.5 * (Y ADA) @ errado entrada invalida MEM
+2 (3 4 *) + (3 RES) ^ @ certo
+(VAR MEM) 10 + @ errado entrada invalida MEM
+2.5 2.5 * 2.5 * @ certo
+(81 9 // ASA) @certo
+10 5 - (4 RES) + @certo
+7 3 * 2 % 1 + @certo
+12 4 // 3 ^ @certo
+(0.5 0.5 + MEM) @ certo
+10 5 + ( )          @ Erro: Parênteses vazio
+5.5.5 2 +           @ Erro: Mais de um ponto decimal
+10 5 + (            @ Erro: Parênteses não fechado
+8 4 &               @ Erro: Caractere inválido (&)
+10,5 +            @ Erro: Vírgula como separador
++ 5 10              @ Erro: Operador antes dos números (Notação comum, não RPN)
+10 5 + )            @ Erro: Parênteses fechado sem abrir
+4 2 ^ ^             @ Erro: Operador sem operandos suficientes
+15.2.1 3 * @ Erro: Número mal formado
+10 $ 5              @ Erro: Caractere inválido ($)
+10 0 /              @ (Válido para o léxico, mas erro de execução - Divisão por zero)
+(1 RES 5 +          @ Erro: Parênteses não fechado no comando especial
+20 4 // %           @ Erro: Falta de operando para o resto
+5.0 2,0 * @ Erro: Vírgula no segundo número
+(MEM 10 +           @ Erro: Comando especial mal formado
+7 8 9 +             @ Erro: Sobrou operando na pilha (não é erro léxico, mas de RPN)
+12 # 4              @ Erro: Caractere inválido (#)
+( ( ) )             @ Erro: Parênteses aninhados vazios
+4 2 // 2 ** @ Erro: Operador de potência incorreto (deve ser ^)
+3 4 + 5 6 -         @ Erro: Duas expressões sem operador final
+2 2 + (5 RES)       @ Errado 2 numeros finais
+(9 3 / MEM) 2 ^ @ errado numeros insuficientes
+10 2 % @certo
+5 5 5 * * @ certo
+2 10 ^ (1 RES) / @certo
