@@ -1,3 +1,12 @@
+"""
+
+Grupo: RA1-6
+Alunos:
+    Fabricio Goes Pinterich : @fapinter
+    Leonardo Min Woo Chung: @LeonardoChung
+    Phillip Wan Tcha Yan: @PhillipYan
+
+"""
 from typing import List
 from collections import deque
 
