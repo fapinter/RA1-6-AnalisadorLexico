@@ -17,7 +17,7 @@ a partir de uma linguagem pré-definida.
 O projeto possui os seguintes componentes para montar as expressões:
 - **Números Inteiros e Reais**: 10, 21.2, -23
 - **Operadores aritméticos**: +, -, *, /, //, %, ^
-- **Parênteses**: (  )
+- **Parênteses**: (, )
 - **Comandos Especiais**:
     - (N RES): Resposta de Nésima linha acima
     - (N MEM): Armazenamento de um Número Real(N) em uma váriavel(MEM)
@@ -29,11 +29,11 @@ O projeto possui os seguintes componentes para montar as expressões:
 ## Como funciona ?
 O projeto consiste em 4 partes principais:
 
-- **Parsing da Expressão**: Analisa a expressão em termos de sintaxe, captando erros como:
+- **Parse da Expressão**: Gera e valida os tokens da expressão a partir de um AFD, captando erros como:
     - Números mal formados (Ex: 10,5 10.4.3).
     - Caracteres fora da Linguagem estabelecida (Ex: &, **, strings_lower_case).
-    - Parênteses não fechados, fechamento sem abertura e parênteses vazios.
+    - Parênteses desbalanceados.
 
-- **Execução da Expressão**: Executa a expressão e valida a expressão em termos de:
-    - Falta de parâmetros para uma operação (Ex: 2 +)
-    - Parâmetros inválidos para uma operação (Ex: 10 0 /(divisão por zero), 20.4 2 //(divisão inteira com reais))
+- **Execução da Expressão**: Executa a expressão:
+    - Salvando os resultados e variáveis em dicionários.
+
