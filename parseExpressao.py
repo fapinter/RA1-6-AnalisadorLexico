@@ -7,14 +7,15 @@ Alunos:
     Phillip Wan Tcha Yan: @PhillipYan
 
 """
-from typing import List
+from typing import List, Tuple
 from collections import deque
 
+# Exceção customizada para indicar erros de validação
 class InvalidParsingError(Exception):
     def __init__(self, message: str):
         super().__init__(message)
 
-#Validacao se um token eh um float ou nao
+#Validação se um token é um float ou não
 def is_float(token: str) -> bool:
     try:
         float(token)
@@ -22,12 +23,13 @@ def is_float(token: str) -> bool:
     except ValueError:
         return False
 
-def define_next_state(next_position: int, tokens: List[str], size: int) -> str:
+#Definição das Transições
+def define_next_state(next_token: str, next_position: int, size: int) -> str:
+    #Evita erros de index out of range pela natureza da captura do próximo estado
     if next_position >= size:
         return ''
     operacoes = {'+','-','*','/', '//', '%', '^'}
     parenteses = {'(', ')'}
-    next_token = tokens[next_position]
     if next_token in operacoes:
         return 'operacao'
     elif next_token in parenteses:
@@ -37,47 +39,46 @@ def define_next_state(next_position: int, tokens: List[str], size: int) -> str:
     elif next_token.isupper():
         return 'comando'
     else:
-        raise InvalidParsingError('Caracter invalido/Mal Formatado')
+        raise InvalidParsingError(f'Caracter [{next_token}] invalido/Mal Formatado')
 
-#Retornara se a linha nao possui nenhum erro de sintaxe
-# Erros como os listados abaixo nao sao detectados nesta fase
-# apenas na fase de execucao
-# - (Numero insuficiente para operador)
-# - (Valor invalido para comandos/operadores)
-def parseExpressao(linha: str, numero_linha: int) -> bool:
 
-    #Utilizado para o Parse de numeros
-    #erros de formatacao ja sao capturados no define_next_state()
+def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
+    #Utilizado para Números inteiros e reais
     def estadoNumero(tokens: List[str], position: int) -> str:
         try:
-            return define_next_state(next_position=position+1, tokens=tokens, size=len(tokens))
+            return define_next_state(next_token=tokens[position+1], next_position=position+1, size=len(tokens))
         except InvalidParsingError:
             raise
 
-    #Utilizado tanto para Comando(MEM, RES)
-    #quanto para Operadores(+, - , *, /, //, %, ^)
+    #Utilizado para Operadores(+, - , *, /, //, %, ^)
     def estadoOperacao(tokens: List[str], position: int) -> str:
         try:
-            return define_next_state(next_position=position+1, tokens=tokens, size=len(tokens))
+            return define_next_state(next_token=tokens[position+1], next_position=position+1, size=len(tokens))
+        except InvalidParsingError:
+            raise
+    
+    #Utilizado para Comandos (MEM, RES)
+    def estadoComando(tokens: List[str], position: int) -> str:
+        try:
+            return define_next_state(next_token=tokens[position+1], next_position=position+1, size=len(tokens))
         except InvalidParsingError:
             raise
         
+    #Utilizado para Parênteses
     def estadoParenteses(stack_parenteses: deque, tokens: List[str], position: int) -> str:
         try:
-            #Fechamento de parenteses remove o ultimo item do stack
+            #Fechamentos de parênteses removem o último item do stack
             if tokens[position] == ')':
                 #Nenhuma abertura no stack
                 if len(stack_parenteses) == 0:
                     raise InvalidParsingError('Fechamento de parenteses sem abertura')
-                if tokens[position-1] == '(':
-                    raise InvalidParsingError('Parenteses sem conteudo dentro')
                 #Remove a ultima abertura de parenteses
                 stack_parenteses.pop()
             #Abertura de parenteses adicionam um item no final do stack
             elif tokens[position] == '(':
                 stack_parenteses.append('(')
             
-            return define_next_state(next_position=position+1, tokens=tokens, size=len(tokens))
+            return define_next_state(next_token=tokens[position+1], next_position=position+1, size=len(tokens))
         
         except InvalidParsingError:
             raise
@@ -85,11 +86,10 @@ def parseExpressao(linha: str, numero_linha: int) -> bool:
     #Stack para controlar abertura e fechamento de parenteses
     stack_parenteses = deque()
     tokens = linha.split(' ')
-    position = 0
     try:
         next_state = define_next_state(tokens=tokens, next_position=0, size=len(tokens))
     except InvalidParsingError as ipe:
-        print(f'Linha {numero_linha} eh invalida: {ipe}')
+        print(f'Linha [{numero_linha}] é inválida: {ipe}')
         return False, tokens
 
     for position in range(0, len(tokens)):
@@ -102,14 +102,13 @@ def parseExpressao(linha: str, numero_linha: int) -> bool:
                 case 'operacao':
                     next_state = estadoOperacao(tokens=tokens, position=position)
                 case 'comando':
-                    next_state = estadoOperacao(tokens=tokens, position=position)
-
-                case None:
-                    raise InvalidParsingError
+                    next_state = estadoComando(tokens=tokens, position=position)
+                
         except InvalidParsingError as ipe:
-            print(f'Linha {numero_linha} eh invalida: {ipe}')
+            print(f'Linha [{numero_linha}] é inválida: {ipe}')
             return False, tokens
     
+    #Caso os parênteses estejam desbalanceados, a expressão é considerada inválida
     if len(stack_parenteses) > 0:
         print(f'Linha {numero_linha} eh invalida: Parenteses nao fechados')
         return False, tokens
@@ -117,41 +116,21 @@ def parseExpressao(linha: str, numero_linha: int) -> bool:
         
     
 if __name__ == "__main__":
-    num_passed = 0
-    count_line = 0
-    f_res = open('resultados_teste.txt', 'w')
-    with open('arquivo_teste.txt', 'r') as f:
-        while True:
-            line = f.readline()
-            if not line:
-                break
-            #Tratamento da linha para separar dados para o relatorio
-            count_line += 1
-            separate_line = line.split(' @')
-            line = separate_line[0]
-            should = separate_line[1].replace('\n', '')
-            if should.startswith('errado'):
-                validation_step = separate_line[1].split(' ')[1]
-            else:
-                validation_step = ''
-            print(f'[{count_line}]Tokenized line: {line.split(' ')}')
-            valid_line, tokenized_string = parseExpressao(linha=line, numero_linha=count_line)
-            
-            #Verifica se o parser acertou ou errou
-            passed = False
-            if valid_line:
-                if should=='certo':
-                    passed = True
-                    num_passed += 1
-                if validation_step.startswith('exec'):
-                    passed = True
-                    num_passed += 1
-            #Se encontra um erro que deve ser detectado
-            #na fase do parse, o parser acertou
-            else:
-                if validation_step.startswith('parse'):
-                    passed=True
-                    num_passed += 1
-            f_res.write(f'Passed[{passed}] Parse[{valid_line}] Answer[{should}] {line}\n')
-    f_res.write(f'Passed [{num_passed}/{count_line}]')
+    test_cases = [
+        '5.5.5 2 +',
+        '10,5 4 -',
+        '10 5 $',
+        '10 ( 2 4 +',
+        '10 asa +',
+        '10 12 +',
+        '10 13.5 //'
+    ]
+    f_res = open('resultados_teste_parse.txt', 'w')
+    for test_idx in range(0, len(test_cases)):
+        line = test_cases[test_idx]
+        print(f'[{test_idx}]Tokenized line: {line.split(' ')}')
+
+        valid_line, tokenized_string = parseExpressao(linha=line, numero_linha=test_idx)
+        
+        f_res.write(f'Parse[{valid_line}] {line}\n')
     f_res.close()
