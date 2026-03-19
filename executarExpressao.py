@@ -69,19 +69,16 @@ def executar_AFD(
         if token=='RES':
             num_res = int(stack.pop())
             res = resultados[num_linha - num_res]
-            print(f'resultado da linha {num_linha-num_res} invocado: {res}')
             stack.append(res)
         else:
             # Se existe um valor anterior, é armazenado na variável
             # Se não existir, inicializa a variável com valor 0.0 e adiciona ela ao stack
             if len(stack) > 0:
                 value_mem = float(stack.pop())
-                print(f'Valor {value_mem} atribuído a {token}')
                 memoria[token] = value_mem
             else:
                 if token not in memoria:
                     memoria[token] = 0.0
-                print(f'Variável {token} chamada, valor {memoria[token]}')
                 stack.append(str(memoria[token]))
                     
 
@@ -139,14 +136,15 @@ if __name__ == "__main__":
     ]
     resultados = {}
     memoria = {}
+    file = open('resultados_teste_executarExpressao.txt', 'w')
     for idx_string in range (0, len(list)):
         token_string = list[idx_string]
-        print(f'Tokenized string: {token_string}')
+        file.write(f'Tokenized string: {token_string}\n')
         executarExpressao(tokens=token_string,resultados=resultados, memoria=memoria, num_linha=idx_string+1)
-        print(f'Resultado da linha {idx_string+1}: {resultados[idx_string+1]}')
-    print(f'Resultados: {resultados}')
+        file.write(f'Resultado [{resultados[idx_string+1]}] : Esperado [{expected_results[idx_string]}]\n')
     for idx in range (1, max(resultados.keys())+1):
         if resultados[idx]==expected_results[idx-1]:
-            print(f'Linha {idx} correta')
-    print(f'Memoria: {memoria}')
+            file.write(f'Linha {idx} passou\n')
+    file.write(f'Resultados: {resultados}\n')
+    file.write(f'Memoria: {memoria}\n')
     
