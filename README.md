@@ -35,5 +35,10 @@ O projeto consiste em 4 partes principais:
     - Parênteses desbalanceados.
 
 - **Execução da Expressão**: Executa a expressão:
-    - Salvando os resultados e variáveis em dicionários.
+    - Salvando os resultados e variáveis em dicionários para comparação posterior com o código Assembly.
 
+
+## Como testar?
+Cada arquivo, que não seja o `main.py` possui uma sessão para testes.
+Ao rodar este arquivo em específico, os testes são realizados e gravados em um arquivo
+`resultados_teste_*.txt`.
