@@ -1,23 +1,23 @@
-( ( 10 5 + ) MEM ) @certo
-( 3.14 2 ^ ) 5 * @certo
-20 4 // ( 10 MEM ) @certo
-15 3 % 2.5 + @certo
+( ( 10 5 + ) MEM )
+( 3.14 2 ^ ) 5 * 
+20 4 // ( 10 MEM ) 
+15 3 % 2.5 + 
 100 2 / ( 1 RES ) @errado exec
 2 ( X MEM ) 5 * @errado exec
-( 8 2 ^ 10 + BAGUGA ) @certo
-45.5 5.5 - 2 / @certo
-10 20 30 + * @certo
-( MEM ) 5 + ( 1 RES ) * @certo
-50 2 // 5 % @certo
+( 8 2 ^ 10 + BAGUGA ) 
+45.5 5.5 - 2 / 
+10 20 30 + * 
+( MEM ) 5 + ( 1 RES ) * 
+50 2 // 5 % 
 12.5 0.5 * ( Y ADA ) @errado exec
-2 ( 3 4 * ) + ( 3 RES ) ^ @certo
+2 ( 3 4 * ) + ( 3 RES ) ^ 
 ( VAR MEM ) 10 + @errado exec
-2.5 2.5 * 2.5 * @certo
-( 81 9 // ASA ) @certo
-10 5 - ( 4 RES ) + @certo
-7 3 * 2 % 1 + @certo
-12 4 // 3 ^ @certo
-( 0.5 0.5 + MEM ) @certo
+2.5 2.5 * 2.5 * 
+( 81 9 // ASA ) 
+10 5 - ( 4 RES ) + 
+7 3 * 2 % 1 + 
+12 4 // 3 ^ 
+( 0.5 0.5 + MEM ) 
 10 5 + ( ) @errado parse
 5.5.5 2 + @errado parse
 10 5 + ( @errado parse
@@ -40,6 +40,6 @@
 3 4 + 5 6 - @errado exec
 2 2 + ( 5 RES ) @errado exec
 ( 9 3 / MEM ) 2 ^ @errado exec
-10 2 % @certo
-5 5 5 * * @certo
-2 10 ^ ( 1 RES ) / @certo
+10 2 % 
+5 5 5 * * 
+2 10 ^ ( 1 RES ) / 
