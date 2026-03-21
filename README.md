@@ -42,3 +42,11 @@ O projeto consiste em 4 partes principais:
 Cada arquivo, que não seja o `main.py` possui uma sessão para testes.
 Ao rodar este arquivo em específico, os testes são realizados e gravados em um arquivo
 `resultados_teste_*.txt`.
+
+## Como executar
+Para executar o programa principal, rode no terminal:
+
+```bash
+python main.py teste1.txt
+python main.py teste2.txt
+python main.py teste3.txt
