@@ -115,15 +115,6 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
         operacoes = {'+','-','*','/', '%', '^'}
         parenteses = {'(', ')'}
         char = linha[position]
-        if char=='-':
-            # - pode ser interpretado como um sinal de um
-            # número ou o operador da subtração
-            if position+1 >= len(linha):
-                return 'operacao'
-            elif linha[position+1].isdigit():
-                return 'numero'
-            else:
-                return 'operacao'
         if char in operacoes:
             return 'operacao'
         elif char in parenteses:
@@ -176,22 +167,22 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
 if __name__ == "__main__":
     test_cases = [
         '5.5.5 2 +',
-        '-10,5 4 -',
+        '10,5 4 -',
         '10 ( ) 5 $',
         '10 ( 2 4 +',
         '10 AsA +',
-        '10 +12 +',
+        '10 12 +',
         '10 13.5 //',
         '10 MEMORIA',
         '10 RES',
-        '( 10 MEM ) -20 +',
-        '-20 10 +'
+        '( 10 MEM ) 20 +',
+        '20 10 +'
     ]
-    f_res = open('resultados_teste_parse.txt', 'w')
+    f_res = open('resultados_teste_parseExpressao.txt', 'w')
     for test_idx in range(0, len(test_cases)):
         line = test_cases[test_idx]
         valid_line, tokenized_string = parseExpressao(linha=line, numero_linha=test_idx)
         print(f'[{test_idx}]Tokenized line: {tokenized_string}')
 
-        f_res.write(f'Parse[{valid_line}]\nToken split: {line.split(' ')} : {tokenized_string}\n')
+        f_res.write(f'Parse[{valid_line}]\nToken split: {line.split(' ')} : AFD split: {tokenized_string}\n')
     f_res.close()
