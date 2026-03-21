@@ -1,3 +1,11 @@
+"""
+Grupo: RA1-6
+Alunos:
+    Fabricio Goes Pinterich : @fapinter
+    Leonardo Min Woo Chung: @LeonardoChung
+    Phillip Wan Tcha Yan: @PhillipYan
+"""
+
 import sys
 
 def main():
