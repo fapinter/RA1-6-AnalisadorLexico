@@ -184,5 +184,5 @@ if __name__ == "__main__":
         valid_line, tokenized_string = parseExpressao(linha=line, numero_linha=test_idx)
         print(f'[{test_idx}]Tokenized line: {tokenized_string}')
 
-        f_res.write(f'Parse[{valid_line}]\nToken split: {line.split(' ')} : AFD split: {tokenized_string}\n')
+        f_res.write(f"Parse[{valid_line}]\nToken split: {line.split(' ')} : AFD split: {tokenized_string}\n")
     f_res.close()
