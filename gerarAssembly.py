@@ -50,6 +50,29 @@ def is_number(token):
 #Faz conferência de número ou operador para guardar as informações na variável
 def emitAssembly(item, assembly_lines):
     if isinstance(item, list):
+        if len(item) == 1 and item[0].isupper() and item[0] != "MEM":
+            memory_name = item[0]
+            assembly_lines.append(f"ldr r0, ={memory_name}")
+            assembly_lines.append("vldr d0, [r0]")
+            assembly_lines.append("bl push_d0")
+            return
+
+        if len(item) == 2 and item[1] == "MEM":
+            emitAssembly(item[0], assembly_lines)
+            assembly_lines.append("bl pop_to_d0")
+            assembly_lines.append("bl res_lookup")
+            assembly_lines.append("bl push_d0")
+            return
+
+        if len(item) == 2 and item[1].isupper() and item[1] != "MEM":
+            memory_name = item[1]
+            emitAssembly(item[0], assembly_lines)
+            assembly_lines.append("bl pop_to_d0")
+            assembly_lines.append(f"ldr r0, ={memory_name}")
+            assembly_lines.append("vstr d0, [r0]")
+            assembly_lines.append("bl push_d0")
+            return
+
         for subitem in item:
             emitAssembly(subitem, assembly_lines)
         return
@@ -88,6 +111,26 @@ def emitAssembly(item, assembly_lines):
         assembly_lines.append("bl push_d0")
         return
 
+    if item == "//":
+        assembly_lines.append("bl pop_to_d0")
+        assembly_lines.append("bl pop_to_d1")
+        assembly_lines.append("bl op_int_div")
+        assembly_lines.append("bl push_d0")
+        return
+
+    if item == "%":
+        assembly_lines.append("bl pop_to_d0")
+        assembly_lines.append("bl pop_to_d1")
+        assembly_lines.append("bl op_int_mod")
+        assembly_lines.append("bl push_d0")
+        return
+
+    if item == "^":
+        assembly_lines.append("bl pop_to_d0")
+        assembly_lines.append("bl pop_to_d1")
+        assembly_lines.append("bl op_pow")
+        assembly_lines.append("bl push_d0")
+        return
 
 
 
@@ -108,13 +151,16 @@ def gerarAssembly(tokens):
 
 if __name__ == "__main__":
     tests = [
-        "10 12 +",
-        "10 2 -",
-        "2.5 5 *",
-        "8 2 /",
-        "(3.14 2.0 +)",
-        "((1.5 2.0 *) (3.0 4.0 *) /)"
-    ]
+    "(3.14 2.0 +)",
+    "((1.5 2.0 *) (3.0 4.0 *) /)",
+    "(5.0 MEM)",
+    "(MEM)",
+    "(2 RES)",
+    "(10 3 //)",
+    "(10 3 %)",
+    "(2 4 ^)"
+]
+
 
     for i, line in enumerate(tests, start=1):
         valid, tokens = parseExpressao(line, i)
