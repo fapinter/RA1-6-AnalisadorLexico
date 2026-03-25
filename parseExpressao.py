@@ -44,14 +44,8 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
                         is_float = True
                     else:
                         raise InvalidParsingError(f'Número Real [{token+char}] mal formatado')
-<<<<<<< HEAD
-                elif char in {' ', '(', ')'}:
-                    process = False
-                    continue
-=======
                 elif char==' ':
                     process = False
->>>>>>> abeb3d448595dd4a53e08272a817a8d18de762b1
                 else:
                     raise InvalidParsingError(f'Número [{token+char}] mal formatado')
                 idx += 1
@@ -70,11 +64,7 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
             if next_char=='/':
                 token+=next_char
                 return token, idx+1
-<<<<<<< HEAD
-            elif next_char in {' ', '(', ')'}:
-=======
             elif next_char==' ':
->>>>>>> abeb3d448595dd4a53e08272a817a8d18de762b1
                 return token, idx
             else:
                 raise InvalidParsingError(f'Operador [{token+next_char}] inválido')
@@ -93,14 +83,8 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
                 char = linha[idx]
                 if char.isupper():
                     token += char
-<<<<<<< HEAD
-                elif char in {' ', '(', ')'}:
-                    process = False
-                    continue
-=======
                 elif char == ' ':
                     process = False
->>>>>>> abeb3d448595dd4a53e08272a817a8d18de762b1
                 else:
                     raise InvalidParsingError(f'Caracter [{token+char}] Inválido/Mal Formatado')
                 idx += 1
