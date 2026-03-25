@@ -1,0 +1,179 @@
+.data
+label_0_0: .double 0.0
+label_1_0: .double 1.0
+label_5_5: .double 5.5
+label_1: .double 1
+label_2: .double 2
+label_3: .double 3
+label_MEM: .double 0.0
+current_line: .word 0
+results: .space 16
+stack_base: .space 4096
+stack_top: .word 0
+
+.text
+.global _start
+_start:
+ldr r0, =stack_base
+ldr r1, =stack_top
+str r0, [r1]
+mov r0, #1
+ldr r1, =current_line
+str r0, [r1]
+ldr r0, =label_5_5
+vldr d0, [r0]
+bl push_d0
+bl pop_to_d0
+ldr r0, =label_MEM
+vstr d0, [r0]
+bl push_d0
+bl pop_to_d0
+ldr r0, =results
+add r0, r0, #0
+vstr d0, [r0]
+
+mov r0, #2
+ldr r1, =current_line
+str r0, [r1]
+ldr r0, =label_1
+vldr d0, [r0]
+bl push_d0
+bl pop_to_d0
+bl res_lookup
+bl push_d0
+ldr r0, =label_2
+vldr d0, [r0]
+bl push_d0
+ldr r0, =label_3
+vldr d0, [r0]
+bl push_d0
+bl pop_to_d0
+bl pop_to_d1
+vadd.f64 d0, d1, d0
+bl push_d0
+bl pop_to_d0
+bl pop_to_d1
+vmul.f64 d0, d1, d0
+bl push_d0
+bl pop_to_d0
+ldr r0, =results
+add r0, r0, #8
+vstr d0, [r0]
+
+
+b end
+
+push_d0:
+push {r0, r1}
+ldr r0, =stack_top
+ldr r1, [r0]
+vstr d0, [r1]
+add r1, r1, #8
+str r1, [r0]
+pop {r0, r1}
+bx lr
+
+pop_to_d0:
+push {r0, r1}
+ldr r0, =stack_top
+ldr r1, [r0]
+sub r1, r1, #8
+vldr d0, [r1]
+str r1, [r0]
+pop {r0, r1}
+bx lr
+
+pop_to_d1:
+push {r0, r1}
+ldr r0, =stack_top
+ldr r1, [r0]
+sub r1, r1, #8
+vldr d1, [r1]
+str r1, [r0]
+pop {r0, r1}
+bx lr
+
+res_lookup:
+ldr r0, =current_line
+ldr r1, [r0]
+vcvt.s32.f64 s0, d0
+vmov r2, s0
+sub r1, r1, r2
+sub r1, r1, #1
+cmp r1, #0
+blt res_zero
+mov r2, #8
+mul r1, r1, r2
+ldr r0, =results
+add r0, r0, r1
+vldr d0, [r0]
+bx lr
+res_zero:
+ldr r0, =label_0_0
+vldr d0, [r0]
+bx lr
+
+op_int_div:
+vcvt.s32.f64 s0, d1
+vcvt.s32.f64 s2, d0
+vmov r0, s0
+vmov r1, s2
+cmp r1, #0
+beq int_div_zero
+mov r2, #0
+mov r3, r0
+int_div_loop:
+cmp r3, r1
+blt int_div_done
+sub r3, r3, r1
+add r2, r2, #1
+b int_div_loop
+int_div_done:
+vmov s4, r2
+vcvt.f64.s32 d0, s4
+bx lr
+int_div_zero:
+ldr r0, =label_0_0
+vldr d0, [r0]
+bx lr
+
+op_int_mod:
+vcvt.s32.f64 s0, d1
+vcvt.s32.f64 s2, d0
+vmov r0, s0
+vmov r1, s2
+cmp r1, #0
+beq int_mod_zero
+mov r2, r0
+int_mod_loop:
+cmp r2, r1
+blt int_mod_done
+sub r2, r2, r1
+b int_mod_loop
+int_mod_done:
+vmov s4, r2
+vcvt.f64.s32 d0, s4
+bx lr
+int_mod_zero:
+ldr r0, =label_0_0
+vldr d0, [r0]
+bx lr
+
+op_pow:
+push {r0, r1}
+vcvt.s32.f64 s0, d0
+vmov r1, s0
+ldr r0, =label_1_0
+vldr d0, [r0]
+cmp r1, #0
+beq pow_done
+pow_loop:
+vmul.f64 d0, d0, d1
+subs r1, r1, #1
+bne pow_loop
+pow_done:
+pop {r0, r1}
+bx lr
+
+end:
+b end
