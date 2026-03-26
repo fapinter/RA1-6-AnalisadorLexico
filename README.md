@@ -27,7 +27,12 @@ O projeto possui os seguintes componentes para montar as expressões:
 
 
 ## Como funciona ?
-O projeto consiste em 4 partes principais:
+O projeto consiste nas seguintes partes principais:
+
+- **Leitura do arquivo de entrada**:
+    - O programa recebe como parâmetro um arquivo de texto contendo as expressões que serão processadas.
+    - Esse arquivo deve ser passado pela linha de comando, por exemplo: `python exibirResultados.py teste1.txt`.
+    - Para executar o projeto, é necessário ter o **Python instalado** na máquina.
 
 - **Parse da Expressão**: Gera e valida os tokens da expressão a partir de um AFD, captando erros como:
     - Números mal formados (Ex: 10,5 10.4.3).
@@ -37,6 +42,8 @@ O projeto consiste em 4 partes principais:
 - **Execução da Expressão**: Executa a expressão:
     - Salvando os resultados e variáveis em dicionários para comparação posterior com o código Assembly.
 
+- **Exibição dos resultados**:
+    - Ao final da execução, o programa mostra os resultados obtidos, além de informar possíveis erros de parse ou de execução encontrados ao longo do processamento.
 
 ## Como testar?
 Cada arquivo, que não seja o `main.py` possui uma sessão para testes.
@@ -47,6 +54,6 @@ Ao rodar este arquivo em específico, os testes são realizados e gravados em um
 Para executar o programa principal, rode no terminal:
 
 ```bash
-python main.py teste1.txt
-python main.py teste2.txt
-python main.py teste3.txt
+python exibirResultados.py teste1.txt
+python exibirResultados.py teste2.txt
+python exibirResultados.py teste3.txt
