@@ -9,6 +9,7 @@ Alunos:
 import sys
 from parseExpressao import parseExpressao
 from executarExpressao import executarExpressao
+from gerarAssembly import lerArquivo, gerarAssembly
 
 
 def exibirResultados(resultados):
@@ -18,16 +19,13 @@ def exibirResultados(resultados):
 
 def main():
     if len(sys.argv) < 2:
-        print("Passe o nome do arquivo de teste.")
+        print("Passe o nome do arquivo de teste")
         return
 
     nome_arquivo = sys.argv[1]
 
-    try:
-        with open(nome_arquivo, "r", encoding="utf-8") as arquivo:
-            linhas = arquivo.readlines()
-    except FileNotFoundError:
-        print("Arquivo nao encontrado.")
+    linhas = []
+    if not lerArquivo(nome_arquivo, linhas):
         return
 
     resultados = {}
@@ -35,6 +33,8 @@ def main():
     ultimo_token_valido = []
     linhas_invalidas = []
     erros_execucao = {}
+    tokens_por_linha = []
+    linhas_executadas = 0
 
     for numero_linha, linha in enumerate(linhas, start=1):
         linha = linha.strip()
@@ -50,11 +50,11 @@ def main():
             continue
 
         ultimo_token_valido = tokens
+        tokens_por_linha.append(tokens)
 
         try:
             executarExpressao(tokens, resultados, memoria, numero_linha)
-
-            # assembly entra aqui
+            linhas_executadas += 1
 
         except Exception as e:
             erros_execucao[numero_linha] = str(e)
@@ -72,12 +72,21 @@ def main():
         for linha in sorted(erros_execucao):
             print(f"Linha {linha}: {erros_execucao[linha]}")
 
-    print(f"Linhas executadas com sucesso: {len(resultados)}")
+    print("\nResumo:")
+    print(f"Linhas executadas com sucesso: {linhas_executadas}")
+    print(f"Linhas com resultado exibido: {len(resultados)}")
     print(f"Linhas invalidas no parse: {len(linhas_invalidas)}")
     print(f"Linhas com erro de execucao: {len(erros_execucao)}")
 
     with open("tokens_ultima_execucao.txt", "w", encoding="utf-8") as arquivo_tokens:
         arquivo_tokens.write(" ".join(ultimo_token_valido))
+
+    if len(tokens_por_linha) > 0:
+        assembly = gerarAssembly(tokens_por_linha)
+
+        with open("programa.s", "w", encoding="utf-8") as arquivo_asm:
+            arquivo_asm.write(assembly)
+
 
 if __name__ == "__main__":
     main()
