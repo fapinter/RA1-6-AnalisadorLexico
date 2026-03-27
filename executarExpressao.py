@@ -16,7 +16,7 @@ from utils import is_float, is_int
 
 #Após um parênteses ser resolvido, essa função é chamada para
 #substituir o conteúdo dos parênteses pelo resultado
-def remover_parenteses(tokens: List[str], idx_start: int, idx_end: int, result : float | None = None) -> List[str]:
+def remover_parenteses(tokens: List[str], idx_start: int, idx_end: int, result : float | None) -> List[str]:
     copia_tokens = tokens.copy()
     tokens_start = copia_tokens[0:idx_start]
     if result != None:
@@ -87,7 +87,10 @@ def executar_AFD(
             estadoOperador(token=token, stack=stack_RPN)
         else:
             estadoComando(token=token, stack=stack_RPN, resultados=resultados, memoria=memoria, num_linha=num_linha)
-    return float(stack_RPN.pop())
+    if len(stack_RPN) == 0:
+        return None
+    else:
+        return float(stack_RPN.pop())
 
 
 def executarExpressao(
@@ -97,13 +100,19 @@ def executarExpressao(
     num_linha: int
 ) -> None:
 
-    # Extrai a partir do parênteses mais a direita para tratar parênteses aninhados ( Ex: ( 10 12 + ( 21 20 - ) + ) )
-    # Caso não estejam aninhados (Ex: (10 12 -) (20 21 +) +)
-    # apenas irá resolver primeiro pelos parênteses da direita à esquerda, o que não altera em nada no resultado
-    for l_par in reversed([i for i, val in enumerate(tokens) if val=='(']):
-        r_par = tokens.index(')', l_par)
-        #Extrai os tokens dentro dos parênteses e passa para a AFD resolver
-        sub_tokens = tokens[l_par+1:r_par]
+    # Encontra o primeiro fechamento de parênteses, depois percorre os tokens ao contrário
+    # para achar a abertura e resolve chama a AFD para resolver dentro dele
+    # Lida com parênteses aninhados um dentro dos outros
+    # Caso não estejam aninhados, resolverá da forma padrão, da esquerda pra direita
+    print(f'Tokens inicial: {tokens}')
+    while True:
+        try:
+            r_par = tokens.index(')')
+        except ValueError:
+            break
+        l_par = max([i for i, val in enumerate(tokens[:r_par]) if val=='('])
+        print(f'Parenteses {tokens[l_par+1: r_par]} sendo resolvidos\n')
+        sub_tokens = tokens[l_par+1: r_par]
         result_value = executar_AFD(tokens=sub_tokens, resultados=resultados, memoria=memoria, num_linha=num_linha)
         
         #Caso nenhum erro ocorra durante a execução
@@ -111,6 +120,9 @@ def executarExpressao(
             tokens=tokens, idx_start=l_par, idx_end=r_par,
             result=result_value
         )
+        print(f'Tokens novo: {tokens}')
+        
+    print(f"Tokens em parenteses {tokens}\n")
     resultado = executar_AFD(tokens=tokens, resultados=resultados, memoria=memoria, num_linha=num_linha)
     resultados[num_linha] = resultado
 
@@ -120,7 +132,7 @@ if __name__ == "__main__":
     list = [
     ["(", "15.5", "4.2", "*", ")", "(", "10", "5", "+", ")", "/"],
     ["(", "10", "2", "^", ")", "(", "50", "5", "//", ")", "(", "1", "RES", "10", "%", ")", "+", "+"],
-    ["(", "25.5", "10.5", "+", ")", "(", "3.14", "PI", "PI", ")", "*"],
+    ["(", "25.5", "10.5", "+", ")", "(", "3.14", "PI", ")", "(","PI", ")", "*"],
     ["(", "(", "8", "2", "/", ")", "(", "3", "1", "-", ")", "*", ")", "(", "100", "50", "%", ")", "+"],
     ["100", "(", "(", "5", "2", "%", ")", "(", "10", "2", "*", ")", "+", ")", "/"],
 ]
