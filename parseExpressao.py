@@ -9,19 +9,8 @@ Alunos:
 """
 from typing import List, Tuple
 from collections import deque
+from utils import InvalidParsingError
 
-# Exceção customizada para indicar erros de validação
-class InvalidParsingError(Exception):
-    def __init__(self, message: str):
-        super().__init__(message)
-
-#Validação se um token é um float ou não
-def is_float(token: str) -> bool:
-    try:
-        float(token)
-        return True
-    except ValueError:
-        return False
 
 def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
 
@@ -110,7 +99,6 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
             raise
     
     #Definição das Transições
-
     def define_transition(linha: str, position: int) -> str:
         operacoes = {'+','-','*','/', '%', '^'}
         parenteses = {'(', ')'}
@@ -163,7 +151,8 @@ def parseExpressao(linha: str, numero_linha: int) -> Tuple[bool, List[str]]:
         return False, []
     return True, tokens
         
-    
+
+#Teste do parseExpressao
 if __name__ == "__main__":
     test_cases = [
         '5.5.5 2 +',

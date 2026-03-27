@@ -7,17 +7,12 @@ Alunos:
     Phillip Wan Tcha Yan: @PhillipYan
 
 """
-from typing import List, Tuple, Dict
+from typing import List, Dict
 from collections import deque
-from parseExpressao import is_float
 from math import pow
+from utils import is_float, is_int
 
-def is_int(token: str) -> bool:
-    try:
-        int(token)
-        return True
-    except ValueError:
-        return False
+
 
 #Após um parênteses ser resolvido, essa função é chamada para
 #substituir o conteúdo dos parênteses pelo resultado
@@ -31,6 +26,7 @@ def remover_parenteses(tokens: List[str], idx_start: int, idx_end: int, result :
     return tokens_start
 
 
+#Função para executar uma expressão em RPN sem parênteses
 def executar_AFD(
     tokens: List[str],
     resultados: Dict[int,float],
@@ -119,6 +115,7 @@ def executarExpressao(
     resultados[num_linha] = resultado
 
 
+#Teste do executarExpressao
 if __name__ == "__main__":
     list = [
     ["(", "15.5", "4.2", "*", ")", "(", "10", "5", "+", ")", "/"],
