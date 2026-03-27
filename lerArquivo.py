@@ -18,3 +18,15 @@ def lerArquivo(file_name, lines):
     except FileNotFoundError:
         print(f"Erro ao abrir arquivo: '{file_name}' nao foi encontrado.")
         return False
+
+if __name__ == "__main__":
+    test_files = [
+        'arquivo_teste.txt',
+        'arquivo_que_nao_existe.txt'
+    ]
+    for file in test_files:
+        linhas = []
+        arquivo_aberto = lerArquivo(file_name=file, lines=linhas)
+        print(f'Arquivo {file} Existente? {arquivo_aberto}')
+        for l in linhas:
+            print(l)
