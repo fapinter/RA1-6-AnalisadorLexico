@@ -42,18 +42,24 @@ O projeto consiste nas seguintes partes principais:
 - **Execução da Expressão**: Executa a expressão:
     - Salvando os resultados e variáveis em dicionários para comparação posterior com o código Assembly.
 
+- **Gerar Assembly**: Gera o arquivo .s com o código em assembly:
+    - Separa cada expressão individualmente;
+    - Valida e agrupa os tokens de acordo com os parênteses e cria instruções para cada operação;
+    - Armazena constantes numéricas e variáveis;
+    - Gera o código Assembly em um arquivo .s com todos as informações necessárias; 
+
 - **Exibição dos resultados**:
-    - Ao final da execução, o programa mostra os resultados obtidos, além de informar possíveis erros de parse ou de execução encontrados ao longo do processamento.
+    - Ao final da execução, o programa mostra os resultados obtidos.
 
 ## Como testar?
 Cada arquivo, que não seja o `main.py` possui uma sessão para testes.
-Ao rodar este arquivo em específico, os testes são realizados e gravados em um arquivo
-`resultados_teste_*.txt`.
+Ao rodar este arquivo em específico, os testes são realizados e os resultados são gravados em um arquivo
+`resultados_teste_*.txt`, ou imprimidos no próprio terminal.
 
 ## Como executar
 Para executar o programa principal, rode no terminal:
 
 ```bash
-python exibirResultados.py teste1.txt
-python exibirResultados.py teste2.txt
-python exibirResultados.py teste3.txt
+python main.py teste1.txt
+python main.py teste2.txt
+python main.py teste3.txt
