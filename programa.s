@@ -9,6 +9,8 @@ label_2_5: .double 2.5
 label_5: .double 5
 label_8: .double 8
 label_5_5: .double 5.5
+label_15: .double 15
+label_12: .double 12
 label_1: .double 1
 label_MEM: .double 0.0
 current_line: .word 0
@@ -151,151 +153,17 @@ vstr d0, [r0]
 mov r0, #8
 ldr r1, =current_line
 str r0, [r1]
-ldr r0, =label_MEM
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #56
-vstr d0, [r0]
-
-mov r0, #9
-ldr r1, =current_line
-str r0, [r1]
 ldr r0, =label_5_5
 vldr d0, [r0]
 bl push_d0
 bl pop_to_d0
-bl pop_to_d1
-vadd.f64 d0, d1, d0
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #64
+ldr r0, =label_MEM
 vstr d0, [r0]
-
-mov r0, #10
-ldr r1, =current_line
-str r0, [r1]
-ldr r0, =label_15_0
+bl push_d0
+ldr r0, =label_15
 vldr d0, [r0]
 bl push_d0
-ldr r0, =label_5
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-bl pop_to_d1
-vsub.f64 d0, d1, d0
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #8
-vstr d0, [r0]
-
-mov r0, #3
-ldr r1, =current_line
-str r0, [r1]
-ldr r0, =label_6
-vldr d0, [r0]
-bl push_d0
-ldr r0, =label_2
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-bl pop_to_d1
-vmul.f64 d0, d1, d0
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #16
-vstr d0, [r0]
-
-mov r0, #4
-ldr r1, =current_line
-str r0, [r1]
-ldr r0, =label_9
-vldr d0, [r0]
-bl push_d0
-ldr r0, =label_3
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-bl pop_to_d1
-vdiv.f64 d0, d1, d0
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #24
-vstr d0, [r0]
-
-mov r0, #5
-ldr r1, =current_line
-str r0, [r1]
 ldr r0, =label_12
-vldr d0, [r0]
-bl push_d0
-ldr r0, =label_4
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-bl pop_to_d1
-bl op_int_div
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #32
-vstr d0, [r0]
-
-mov r0, #6
-ldr r1, =current_line
-str r0, [r1]
-ldr r0, =label_14
-vldr d0, [r0]
-bl push_d0
-ldr r0, =label_5
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-bl pop_to_d1
-bl op_int_mod
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #40
-vstr d0, [r0]
-
-mov r0, #7
-ldr r1, =current_line
-str r0, [r1]
-ldr r0, =label_3
-vldr d0, [r0]
-bl push_d0
-ldr r0, =label_2
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-bl pop_to_d1
-bl op_pow
-bl push_d0
-bl pop_to_d0
-ldr r0, =results
-add r0, r0, #48
-vstr d0, [r0]
-
-mov r0, #8
-ldr r1, =current_line
-str r0, [r1]
-ldr r0, =label_10_0
-vldr d0, [r0]
-bl push_d0
-bl pop_to_d0
-ldr r0, =label_VAR
-vstr d0, [r0]
-bl push_d0
-ldr r0, =label_10
-vldr d0, [r0]
-bl push_d0
-ldr r0, =label_20
 vldr d0, [r0]
 bl push_d0
 bl pop_to_d0
@@ -310,7 +178,7 @@ vstr d0, [r0]
 mov r0, #9
 ldr r1, =current_line
 str r0, [r1]
-ldr r0, =label_VAR
+ldr r0, =label_MEM
 vldr d0, [r0]
 bl push_d0
 bl pop_to_d0
@@ -327,19 +195,19 @@ bl push_d0
 bl pop_to_d0
 bl res_lookup
 bl push_d0
-ldr r0, =label_1_5
-vldr d0, [r0]
-bl push_d0
 ldr r0, =label_2
 vldr d0, [r0]
 bl push_d0
+ldr r0, =label_3
+vldr d0, [r0]
+bl push_d0
 bl pop_to_d0
 bl pop_to_d1
 vadd.f64 d0, d1, d0
 bl push_d0
 bl pop_to_d0
 bl pop_to_d1
-vadd.f64 d0, d1, d0
+vmul.f64 d0, d1, d0
 bl push_d0
 bl pop_to_d0
 ldr r0, =results

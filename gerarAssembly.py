@@ -50,20 +50,20 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
             memory_name = item[0]
             label = "label_" + memory_name
 
-            # Guarda esse nome para depois declarar na .data.
+            # Guarda esse nome para depois declarar na .data
             memory_labels.add(label)
 
-            assembly_lines.append(f"ldr r0, ={label}")
-            assembly_lines.append("vldr d0, [r0]")
-            assembly_lines.append("bl push_d0")
+            assembly_lines.append(f"ldr r0, ={label}") # carrega o endereço do valor
+            assembly_lines.append("vldr d0, [r0]") # le o double da memoria para d0
+            assembly_lines.append("bl push_d0") # empilha o valor lido
             return
 
         # caso (N RES): busca um resultado anterior
         if len(item) == 2 and item[1] == "RES":
             emitAssembly(item[0], assembly_lines, literal_labels, memory_labels)
-            assembly_lines.append("bl pop_to_d0")
-            assembly_lines.append("bl res_lookup")
-            assembly_lines.append("bl push_d0")
+            assembly_lines.append("bl pop_to_d0") # recupera o numero no RES
+            assembly_lines.append("bl res_lookup")  # busca o resultado anterior correspondente
+            assembly_lines.append("bl push_d0") # empilha o resultado encontrado
             return
 
         # caso (valor MEM): grava um valor na memoria
@@ -77,9 +77,9 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
             # gera o valor que vai ser salvo
             emitAssembly(item[0], assembly_lines, literal_labels, memory_labels)
             assembly_lines.append("bl pop_to_d0")
-            assembly_lines.append(f"ldr r0, ={label}")
-            assembly_lines.append("vstr d0, [r0]")
-            assembly_lines.append("bl push_d0")
+            assembly_lines.append(f"ldr r0, ={label}") # carrega o endereco da variavel
+            assembly_lines.append("vstr d0, [r0]") # salva o valor na memoria
+            assembly_lines.append("bl push_d0") # reempilha o valor para continuar a expressao
             return
 
         # se nao for caso especial percorre normalmente a subexpressao
@@ -87,11 +87,11 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
             emitAssembly(subitem, assembly_lines, literal_labels, memory_labels)
         return
 
-    # se for numero cria o label e empilha o valor.
+    # se for numero cria o label e empilha o valor em d0
     if is_number(item):
         label = "label_" + item.replace(".", "_")
 
-        # Guarda o literal para declarar depois na .data.
+        # Guarda o literal para declarar depois na .data
         literal_labels[label] = item
 
         assembly_lines.append(f"ldr r0, ={label}")
@@ -99,7 +99,8 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
         assembly_lines.append("bl push_d0")
         return
 
-    # operadores 
+    # operações aritmeticas com os dois valores do topo da pilha
+    # desempilha os dois operandos, faz a operação e empilha o resultado
     if item == "+":
         assembly_lines.append("bl pop_to_d0")
         assembly_lines.append("bl pop_to_d1")
@@ -128,7 +129,7 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
         assembly_lines.append("bl push_d0")
         return
 
-   
+     # divisao inteira
     if item == "//":
         assembly_lines.append("bl pop_to_d0")
         assembly_lines.append("bl pop_to_d1")
@@ -136,7 +137,7 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
         assembly_lines.append("bl push_d0")
         return
 
-  
+    # resto da divisao inteira
     if item == "%":
         assembly_lines.append("bl pop_to_d0")
         assembly_lines.append("bl pop_to_d1")
@@ -144,7 +145,7 @@ def emitAssembly(item, assembly_lines, literal_labels, memory_labels):
         assembly_lines.append("bl push_d0")
         return
 
- 
+    # potencia com expoente inteiro
     if item == "^":
         assembly_lines.append("bl pop_to_d0")
         assembly_lines.append("bl pop_to_d1")
@@ -293,7 +294,7 @@ def gerarAssembly(tokens_por_linha):
         "vldr d0, [r0]",
         "bx lr",
         "",
-        # divisao inteira por subtracoes sucessivas
+        # divisao inteira por subtracoes sucessivas (//)
         "op_int_div:",
         "vcvt.s32.f64 s0, d1",
         "vcvt.s32.f64 s2, d0",
@@ -318,7 +319,7 @@ def gerarAssembly(tokens_por_linha):
         "vldr d0, [r0]",
         "bx lr",
         "",
-        # modulo tambem por subtracoes sucessivas
+        # modulo tambem por subtracoes sucessivas (%)
         "op_int_mod:",
         "vcvt.s32.f64 s0, d1",
         "vcvt.s32.f64 s2, d0",

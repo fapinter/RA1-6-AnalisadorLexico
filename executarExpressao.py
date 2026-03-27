@@ -100,18 +100,17 @@ def executarExpressao(
     num_linha: int
 ) -> None:
 
-    # Encontra o primeiro fechamento de parênteses, depois percorre os tokens ao contrário
-    # para achar a abertura e resolve chama a AFD para resolver dentro dele
-    # Lida com parênteses aninhados um dentro dos outros
-    # Caso não estejam aninhados, resolverá da forma padrão, da esquerda pra direita
-    print(f'Tokens inicial: {tokens}')
+    # Encontra os parênteses mais aninhados à esquerda
+    # e chama a AFD para resolver dentro dele
+    # Lida com parênteses do mais aninhado para o menos aninhado e da esquerda para a direita
+    
     while True:
         try:
             r_par = tokens.index(')')
         except ValueError:
             break
         l_par = max([i for i, val in enumerate(tokens[:r_par]) if val=='('])
-        print(f'Parenteses {tokens[l_par+1: r_par]} sendo resolvidos\n')
+
         sub_tokens = tokens[l_par+1: r_par]
         result_value = executar_AFD(tokens=sub_tokens, resultados=resultados, memoria=memoria, num_linha=num_linha)
         
@@ -120,9 +119,7 @@ def executarExpressao(
             tokens=tokens, idx_start=l_par, idx_end=r_par,
             result=result_value
         )
-        print(f'Tokens novo: {tokens}')
         
-    print(f"Tokens em parenteses {tokens}\n")
     resultado = executar_AFD(tokens=tokens, resultados=resultados, memoria=memoria, num_linha=num_linha)
     resultados[num_linha] = resultado
 
