@@ -15,7 +15,7 @@ a partir de uma linguagem pré-definida.
 
 ## Linguagem Estabelecida
 O projeto possui os seguintes componentes para montar as expressões:
-- **Números Inteiros e Reais**: 10, 21.2, -23
+- **Números Inteiros e Reais**: 10, 21.2
 - **Operadores aritméticos**: +, -, *, /, //, %, ^
 - **Parênteses**: (, )
 - **Comandos Especiais**:
