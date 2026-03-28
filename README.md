@@ -31,7 +31,7 @@ O projeto consiste nas seguintes partes principais:
 
 - **Leitura do arquivo de entrada**:
     - O programa recebe como parâmetro um arquivo de texto contendo as expressões que serão processadas.
-    - Esse arquivo deve ser passado pela linha de comando, por exemplo: `python exibirResultados.py teste1.txt`.
+    - Esse arquivo deve ser passado pela linha de comando, por exemplo: `python main.py teste1.txt`.
     - Para executar o projeto, é necessário ter o **Python instalado** na máquina.
 
 - **Parse da Expressão**: Gera e valida os tokens da expressão a partir de um AFD, captando erros como:
